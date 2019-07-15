@@ -7,19 +7,23 @@ function linkedListGenerator() {
   let head = null;
   let tail = null;
 
-  function getHead() {
-    return head;
-  }
-
-  function getTail() {
-    return tail;
-  }
-
-  function add(value) {
-    let newNode = {
+  let node = function node(value) {
+    return {
       value: value,
       next: null
     };
+  };
+
+  let getHead = function getHead() {
+    return head;
+  };
+
+  let getTail = function getTail() {
+    return tail;
+  };
+
+  let add = function add(value) {
+    let newNode = node(value);
 
     if (!head) {
       head = newNode;
@@ -32,15 +36,12 @@ function linkedListGenerator() {
     }
     currentNode.next = newNode;
     tail = newNode;
-  }
+  };
 
-  function get(n) {
-    // starting point
+  let get = function get(n) {
     let currentNode = head;
-    // i = 0 = starting index
     let i = 0;
 
-    // check if current index is less than desired index & currentNode (to make sure there is even a currentNode)
     while (i < n && currentNode !== null) {
       currentNode = currentNode.next;
       i++;
@@ -49,38 +50,46 @@ function linkedListGenerator() {
       return false;
     }
     return currentNode;
-  }
+  };
 
-  function remove(n) {
-    let currentNode = head;
+  let remove = function remove(n) {
+    let currentNode = get(n);
+    let previousNode = get(n - 1);
 
-    if (currentNode == null || currentNode.next == null) return null;
-
-    //delete first node
-
-    if (n == 0) {
-      let temp = currentNode.data;
-      currentNode = currentNode.next;
-      return temp;
-    }
-
-    let previousNode = null;
-
-    let i = 0;
-
-    while (i < n && currentNode !== null) {
-      previousNode = currentNode;
-      currentNode = currentNode.next;
-      i++;
-    }
-
-    if (currentNode !== null) {
+    if (!currentNode) {
+      return false;
+    } else if (n === 0) {
+      // if node is header
+      head = currentNode.next;
+    } else if (currentNode.next === null) {
+      // if node is tail
+      tail = previousNode;
+      tail.next = null;
+    } else {
+      // if neither head/tail, point previous node to next node
       previousNode.next = currentNode.next;
-      return currentNode.data;
     }
-  }
+  };
 
-  function insert() {}
+  let insert = function insert(n, value) {
+    let currentNode = get(n);
+    let previousNode = get(n - 1);
+    let insertedNode = node(value);
+
+    if (!currentNode) {
+      return false;
+    } else if (n < 0) {
+      return false;
+    } else if (n === 0) {
+      // if node is header
+      insertedNode.next = head;
+      head = insertedNode;
+      return head;
+    } else {
+      insertedNode.next = currentNode;
+      previousNode.next = insertedNode;
+    }
+  };
 
   return {
     getHead,
